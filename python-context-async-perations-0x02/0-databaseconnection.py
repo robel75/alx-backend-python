@@ -1,22 +1,22 @@
 import sqlite3
 
 class DatabaseConnection:
+    # This is the init method
     def init(self, db_name):
-        # init method
         self.db_name = db_name
         self.conn = None
 
+    # This is the enter method
     def enter(self):
-        # enter method
         self.conn = sqlite3.connect(self.db_name)
         return self.conn
 
-    def exit(self, exc_type, exc_val, exc_tb):
-        # exit method
+    # This is the exit method
+    def exit(self, exc_type, exc_value, traceback):
         if self.conn:
             self.conn.close()
 
-# Using the context manager to perform the query SELECT * FROM users
+# Using the context manager to run a SELECT query
 with DatabaseConnection("users.db") as conn:
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM users")
