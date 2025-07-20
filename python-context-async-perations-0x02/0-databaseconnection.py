@@ -2,17 +2,17 @@ import sqlite3
 
 class DatabaseConnection:
     # This is the init method
-    def init(self, db_name):
+    def _init_(self, db_name):
         self.db_name = db_name
         self.conn = None
 
     # This is the enter method
-    def enter(self):
+    def _enter_(self):
         self.conn = sqlite3.connect(self.db_name)
         return self.conn
 
     # This is the exit method
-    def exit(self, exc_type, exc_value, traceback):
+    def _exit_(self, exc_type, exc_value, traceback):
         if self.conn:
             self.conn.close()
 
