@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3v
 import unittest
 from parameterized import parameterized
 from utils import access_nested_map
@@ -24,13 +24,12 @@ class TestAccessNestedMap(unittest.TestCase):
         access_nested_map(nested_map, path)
 
 class TestGetJson(unittest.TestCase):
-   @patch('utils.requests.get') #we replaced the original requests.get with a fake requests.get
-   def test_get_json(self,mock_get): #we passed the fake requests.get in mock_get
-      test_cases=[
+      @parameterized.expand([
          ("http://example.com", {"payload": True}),  #the payload:true is our mock response that appears when the link/url http://example.com is called
          ("http://holberton.io",{"payload": False})
-         ]
-      for test_url, test_payload in test_cases:
+         ])
+      @patch('utils.requests.get')
+      def test_get_json(self, test_url,test_payload,mock_get):
          mock_response = Mock() #created a mock response object called mock_response from the mock class
          mock_response.json.return_value = test_payload #this stores the test_payload values in mock_response in the form of dictionary(json)
          mock_get.return_value = mock_response #the new requests.get value returns the values in the mock_response, which are the json values we assigned above (payload:true)
