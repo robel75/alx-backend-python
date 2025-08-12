@@ -24,7 +24,7 @@ class TestAccessNestedMap(unittest.TestCase):
         access_nested_map(nested_map, path)
 
 class TestGetJson(unittest.TestCase):
-   @patch('requests.get') #we replaced the original requests.get with a fake requests.get
+   @patch('utils.requests.get') #we replaced the original requests.get with a fake requests.get
    def test_get_json(self,mock_get): #we passed the fake requests.get in mock_get
       test_cases=[
          ("http://example.com", {"payload": True}),  #the payload:true is our mock response that appears when the link/url http://example.com is called
