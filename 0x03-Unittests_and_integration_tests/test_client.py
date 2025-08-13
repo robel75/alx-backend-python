@@ -28,7 +28,7 @@ class TestGithubOrgClient(unittest.TestCase):
         client = GithubOrgClient("orgname")
         result = client._public_repos_url
 
-        self.assertEqual(result, expected_payload)
+        self.assertEqual(result, expected_payload["login"])
 
 
 if __name__ == '__main__':
