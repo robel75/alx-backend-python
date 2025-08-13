@@ -40,7 +40,7 @@ def access_nested_map(nested_map: Mapping, path: Sequence) -> Any:
     return nested_map
 
 
-def get_json(url: str) -> Dict:
+def get_json(url: str) -> Dict:   #retrieves data in json format from a url
     """Get JSON from remote URL.
     """
     response = requests.get(url)
