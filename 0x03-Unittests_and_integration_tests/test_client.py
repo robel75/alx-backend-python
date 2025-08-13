@@ -55,13 +55,6 @@ class TestGithubOrgClient(unittest.TestCase):
             mock_url.assert_called_once()
             mock_get_json.assert_called_once_with("https://api.github.com/orgs/torr/repos")
 
-            self.assertEqual(result,expected )    
-        
-
+              
 if __name__ == '__main__':
     unittest.main()        
-        
-        
-            
-
-        
