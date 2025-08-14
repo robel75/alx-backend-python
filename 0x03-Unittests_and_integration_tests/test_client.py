@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+
 """This module contains unit tests for the GithubOrgClient class in client.py.
 
 The tests cover various methods of the GithubOrgClient class including:
@@ -7,9 +7,11 @@ The tests cover various methods of the GithubOrgClient class including:
 - public_repos method
 """
 import unittest
-from parameterized import parameterized
-from unittest.mock import PropertyMock, patch
+from parameterized import parameterized,parameterized_class
+from unittest.mock import PropertyMock, patch, Mock
 from client import GithubOrgClient
+from fixtures import TEST_PAYLOAD
+
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -95,6 +97,32 @@ class TestGithubOrgClient(unittest.TestCase):
         client = GithubOrgClient("testorgs")
         self.assertEqual(client.has_license(repo, license_key), expected)
 
+org_payload = TEST_PAYLOAD[0][0]
+repos_payload = TEST_PAYLOAD[0][1]
+expected_repos = TEST_PAYLOAD[0][2]
+apache2_repos = TEST_PAYLOAD[0][3]
+
+@parameterized_class([
+    {"org_payload": org_payload,
+    "repos_payload": repos_payload,
+    "expected_repos": expected_repos,
+    "apache2_repos": apache2_repos}
+])
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.get_patcher = patch("requests.get")
+        cls.mock_get = cls.get_patcher.start()
+        def side_effect(url):
+            if "orgs/" in url:
+                return Mock(json = lambda: cls.org_payload)
+            elif "repos" in url:
+                return Mock(json = lambda: cls.repos_payload)
+        cls.mock_get.side_effect = side_effect
+    @classmethod
+    def tearDownClass(cls):
+        cls.get_patcher.stop()
+    
 
 if __name__ == '__main__':
     unittest.main()
