@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+"""This module contains unit tests for the GithubOrgClient class in client.py.
+
+The tests cover various methods of the GithubOrgClient class including:
+- org property
+- _public_repos_url property
+- public_repos method
+"""
 import unittest
 from parameterized import parameterized
 from unittest.mock import PropertyMock, patch
