@@ -16,7 +16,7 @@ class TestGithubOrgClient(unittest.TestCase):
     def test_org(self, org_name, mock_get_json):  # org_name
         # stored the parameterized.expand values
         # and mock_get_json saves the mock value of get_json
-        expected_payload = {'login' : org_name}  # stores the org_name in
+        expected_payload = {'login': org_name}  # stores the org_name in
         # dictionary format
         mock_get_json.return_value = expected_payload
         # when the return value of mock_get_json
@@ -39,7 +39,7 @@ class TestGithubOrgClient(unittest.TestCase):
             'client.GithubOrgClient.org',
             new_callable=PropertyMock,
             return_value={
-                "repos_url" : "https://api.github.com/orgs/orgname/repos"}
+                "repos_url": "https://api.github.com/orgs/orgname/repos"}
         )as mock_org:
             client = GithubOrgClient("orgname")
             result = client._public_repos_url
