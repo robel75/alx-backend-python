@@ -4,8 +4,10 @@ from .views import ConversationViewSet, MessageViewSet
 
 router = routers.DefaultRouter()
 router.register('conversations', ConversationViewSet, basename='conversation')
-router.register('messages', MessageViewSet, basename='message')
+nested_router = routers.NestedDefaultRouter(router, r'conversations', lookup='conversation')
+nested_router.register('messages', MessageViewSet, basename='conversation-message')
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('', include(nested_router.urls))
 ]
