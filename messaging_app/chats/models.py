@@ -7,7 +7,7 @@ class Roles(models.TextChoices):
     ADMIN = 'Admin', 'admin'
 
 
-class user(AbstractUser):
+class User(AbstractUser):
     user_id = models.UUIDField(
         primary_key = True,
         default = uuid.uuid4,
