@@ -2,6 +2,9 @@ from rest_framework import serializers
 from .models import User, Conversation, Message
 
 class UserSerializer(serializers.ModelSerializer):
+    
+    phone_number = serializers.CharField(required=False, allow_blank=True)
+
     class Meta:
         model = user
 
@@ -19,6 +22,11 @@ class UserSerializer(serializers.ModelSerializer):
         read_only_fields = ["user_id","created_at"]
 
 class ConversationSerializer(serializers.ModelSerializer):
+    
+    participants = UserSerializer(many=True, read_only=True)
+    messages = MessageSerializer(many=True, read_only=True)
+    participant_count = serializers.SerializerMethodField()
+    
     class Meta:
         model = Conversation
 
@@ -30,6 +38,9 @@ class ConversationSerializer(serializers.ModelSerializer):
         ]
 
         read_only_fields = ["conversation_id", "created_id"]
+
+        def get_participant_count(self, obj):
+        return obj.participants.count()
 
 class MessageSerializer(serializers.ModelSerializers):
     
@@ -47,3 +58,10 @@ class MessageSerializer(serializers.ModelSerializers):
         ]
 
         read_only_fields = ["conversation_id", "created_at"]
+
+        def validate_message_body(self, value):
+        if not value.strip():
+            raise serializers.ValidationError("Message body cannot be empty.")
+        if len(value) > 500:
+            raise serializers.ValidationError("Message body is too long (max 500 characters).")
+        return value
