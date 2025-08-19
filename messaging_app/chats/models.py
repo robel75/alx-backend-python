@@ -16,6 +16,10 @@ class user(AbstractUser):
     
     email = models.EmailField(unique = True)
     created_at = models.DateTimeField(auto_now_add = True)
+    first_name = models.CharField(max_length=150, blank=False)
+    last_name = models.CharField(max_length=150, blank=False)
+    password = models.CharField(max_length=128)
+    phone_number = models.CharField(max_length=32, null=True, blank=True)
 
     role = models.CharField(
         max_length = 10,
