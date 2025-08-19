@@ -1,5 +1,9 @@
 from django.db import models
 import uuid
+from django.contrib.auth.models import AbstractUser, Group, Permission
+from django.conf import settings
+from django.core.exceptions import ValidationError
+
 
 class Roles(models.TextChoices):
     GUEST = 'Guest', 'guest'
@@ -27,6 +31,22 @@ class User(AbstractUser):
         default = Roles.GUEST
     )
 
+    groups = models.ManyToManyField(
+        Group,
+        related_name='chats_users',  #  change to unique related_name
+        blank=True,
+        help_text='The groups this user belongs to.',
+        verbose_name='groups',
+    )
+    user_permissions = models.ManyToManyField(
+        Permission,
+        related_name='chats_users_permissions',  #  unique related_name
+        blank=True,
+        help_text='Specific permissions for this user.',
+        verbose_name='user permissions',
+    )
+
+
     class Meta:
         indexes = [
             models.Index(fields=["role"]),
@@ -52,7 +72,8 @@ class Conversation(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
-
+        
+    def __str__(self):
         names = list(self.participants.values_list("username", flat=True)[:2])
         more = self.participants.count() - len(names)
         end = f" +{more}" if more > 0 else ""
