@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'chats',
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
@@ -126,10 +127,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #i added this below block for the first task in robust api setting up
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.IsAuthenticated",  # Require authentication by default
+        "rest_framework.permissions.IsAuthenticated",
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.SessionAuthentication",  # Enables session-based auth
-        "rest_framework.authentication.BasicAuthentication",    # You can also allow basic auth
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework_simplejwt_authentication_JWTAuthentication",
     ],
+}
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    "Access_Token_LifeTime": timedelta(minutes=30),
+    "Refresh_Token_LifeTime": timedelta(days=7),
 }
