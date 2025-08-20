@@ -3,12 +3,15 @@ from rest_framework import viewsets, permissions, status, filters
 from rest_framework.exceptions import ValidationError
 from .models import Conversation, Message
 from .serializers import ConversationSerializer, MessageSerializer
+from .permissions import IsConversationParticipant
+
 
 
 class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.all().order_by("-created_at")
     serializer_class = ConversationSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsConversationParticipant]
+
 
     def perform_create(self, serializer):
         conversation = serializer.save()
@@ -20,7 +23,8 @@ class ConversationViewSet(viewsets.ModelViewSet):
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all().order_by("sent_at")
     serializer_class = MessageSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsConversationParticipant]
+
 
     def perform_create(self, serializer):
         conversation = serializer.validated_data.get("conversation")

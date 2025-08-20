@@ -132,7 +132,7 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.SessionAuthentication",  # Enables session-based auth
         "rest_framework.authentication.BasicAuthentication",
-        "rest_framework_simplejwt_authentication_JWTAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
 }
 
