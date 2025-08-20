@@ -4,6 +4,8 @@ from rest_framework.permissions import BasePermission, SAFE_METHODS
 class IsConversationParticipant(BasePermission):
 
     def has_object_permission(self, request, view, obj):
+        if not request.user or not request.user.is_authenticated:
+            return False
         # Check for Conversation
         if hasattr(obj, "participants"):
             return obj.participants.filter(id=request.user.id).exists()
