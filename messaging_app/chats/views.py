@@ -5,11 +5,19 @@ from .models import Conversation, Message
 from .serializers import ConversationSerializer, MessageSerializer
 from .permissions import IsConversationParticipant
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import OrderingFilter, SearchFilter
+from .filters import MessageFilter
+
 
 
 class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
     permission_classes = [permissions.IsAuthenticated, IsConversationParticipant]
+    filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
+    filterset_class = MessageFilter
+    ordering_fields = ["sent_at"]
+    search_fields = ["content"]
 
     def get_queryset(self):
         conversation_id = self.kwargs.get("conversation_pk")
@@ -24,7 +32,7 @@ class MessageViewSet(viewsets.ModelViewSet):
         if not conversation.participants.filter(id=self.request.user.id).exists():
             return Response(
                 {"detail": "You are not a participant in this conversation."},
-                status=status.HTTP_403_FORBIDDEN,  # 🔑 checker wants this
+                status=status.HTTP_403_FORBIDDEN, 
             )
 
         serializer.save(sender=self.request.user, conversation=conversation)
