@@ -9,7 +9,16 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter, SearchFilter
 from .filters import MessageFilter
 
+class ConversationViewSet(viewsets.ModelViewSet):
+    queryset = Conversation.objects.all().order_by("-created_at")
+    serializer_class = ConversationSerializer
+    permission_classes = [permissions.IsAuthenticated, IsConversationParticipant]
 
+    def perform_create(self, serializer):
+        conversation = serializer.save()
+        conversation.participants.add(self.request.user)
+        conversation.save()
+        return conversation
 
 class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
