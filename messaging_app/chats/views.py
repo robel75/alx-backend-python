@@ -16,7 +16,7 @@ class ConversationViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         conversation = serializer.save()
-        conversation.participants.add(self.request.user)
+        conversation.participants_id.add(self.request.user)
         conversation.save()
         return conversation
 
@@ -38,7 +38,7 @@ class MessageViewSet(viewsets.ModelViewSet):
         conversation_id = self.kwargs.get("conversation_pk")
         conversation = get_object_or_404(Conversation, pk=conversation_id)
 
-        if not conversation.participants.filter(id=self.request.user.id).exists():
+        if not conversation.participants_id.filter(id=self.request.user.id).exists():
             return Response(
                 {"detail": "You are not a participant in this conversation."},
                 status=status.HTTP_403_FORBIDDEN, 

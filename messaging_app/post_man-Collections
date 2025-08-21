@@ -1,0 +1,264 @@
+{
+  "info": {
+    "_postman_id": "e7f28a4f-2a1a-48a7-9d15-000000000001",
+    "name": "Messaging App API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Postman collection to test the messaging_app API: login (JWT), conversations, and messages."
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login (JWT via /api/token)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/token",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "token"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"testpassword\"\n}"
+            },
+            "description": "Logs in with username/password and stores the returned JWT access token in the environment as {{auth_token}}."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "  pm.expect(pm.response.code).to.equal(200);",
+                  "});",
+                  "let json;",
+                  "try { json = pm.response.json(); } catch (e) { json = {}; }",
+                  "if (json.access) {",
+                  "  pm.environment.set('auth_token', json.access);",
+                  "}",
+                  "pm.test('Saved a token to {{auth_token}}', function () {",
+                  "  pm.expect(pm.environment.get('auth_token')).to.be.a('string');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Conversations",
+      "item": [
+        {
+          "name": "Create Conversation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/conversations/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "conversations",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"My First Conversation\",\n  \"participants\": [\n    2,\n    3\n  ]\n}"
+            },
+            "description": "Creates a new conversation. Update the participants array with actual user IDs."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Created (201)', function () {",
+                  "  pm.expect(pm.response.code).to.equal(201);",
+                  "});",
+                  "let json = {};",
+                  "try { json = pm.response.json(); } catch(e) {}",
+                  "if (json.id) { pm.environment.set('conversation_id', json.id); }",
+                  "pm.test('Saved conversation_id', function () {",
+                  "  pm.expect(pm.environment.get('conversation_id')).to.exist;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "List My Conversations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/conversations/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "conversations",
+                ""
+              ]
+            },
+            "description": "Lists conversations the current user can access."
+          }
+        },
+        {
+          "name": "Get Conversation by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/conversations/{{conversation_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "conversations",
+                "{{conversation_id}}",
+                ""
+              ]
+            },
+            "description": "Fetch a single conversation by ID. Uses {{conversation_id}} from the Create request."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Messages",
+      "item": [
+        {
+          "name": "Send Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/conversations/{{conversation_id}}/messages/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "conversations",
+                "{{conversation_id}}",
+                "messages",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Hello everyone in this conversation!\"\n}"
+            },
+            "description": "Sends a message to the conversation identified by {{conversation_id}}."
+          }
+        },
+        {
+          "name": "List Messages in Conversation",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/conversations/{{conversation_id}}/messages/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "conversations",
+                "{{conversation_id}}",
+                "messages",
+                ""
+              ]
+            },
+            "description": "Lists messages within the conversation identified by {{conversation_id}}."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Negative Tests (Unauthorized)",
+      "item": [
+        {
+          "name": "Create Conversation (NO AUTH)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/conversations/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "conversations",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Should Fail Without Token\",\n  \"participants\": [\n    2\n  ]\n}"
+            },
+            "description": "Should return 401 Unauthorized because there's no Authorization header."
+          }
+        }
+      ]
+    }
+  ]
+}
