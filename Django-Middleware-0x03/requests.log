@@ -1,0 +1,11 @@
+2025-08-22 11:15:52.733621 - user : Anonymous, -path: /api/token
+2025-08-22 11:16:45.090607 - user : Anonymous, -path: /api/conversations/<conversations_id>/messages/
+2025-08-22 11:19:06.565780 - user : Anonymous, -path: /api/conversations/
+2025-08-22 11:19:51.243106 - user : Anonymous, -path: /api/conversations/<conversations_id>/messages
+2025-08-22 11:20:42.416691 - user : Anonymous, -path: /api/conversations/<conversations_id>/messages/
+2025-08-22 11:21:45.595216 - user : Anonymous, -path: /api/conversations/django.core.exceptions.ValidationError: ['�<conversations_id>� is not a valid UUID.']
+[22/Aug/2025 11:20:42] "POST /api/conversations/<conversations_id>/messages/ HTTP/1.1" 500 179803
+/messages/
+2025-08-22 11:22:20.431652 - user : Anonymous, -path: /api/conversations/20298caa-77ba-4585-afea-372a2db30aaf/messages/
+[22/Aug/2025 11:20:42] "POST /api/conversations/<conversations_id>/messages/ HTTP/1.1" 500 179803
+/messages/
