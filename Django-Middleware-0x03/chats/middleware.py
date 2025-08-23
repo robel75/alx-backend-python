@@ -34,11 +34,23 @@ class OffensiveLanguageMiddleware:
         self.times_requested=5
     
     def __call__(self, request):
-        client_ip = self.get.client_ip(request)
+        client_ip = self.get_client_ip(request)
         now = time.time()
+        if request.method == "POST":
+            if client_ip not in request_log:
+                self.request_log[client_ip]=[]
 
-        if client_ip not in request_log:
-            self.request_log[client_ip]=deque()
+            recent_requests = [t for t in self.request_log[client_ip] 
+            if now - t <time_window]
 
-        request_times = self.request_log[client_ip]
+            self.request_log[client_ip] = recent_requests
+
+            if len(recent_requests)>=times_requested:
+                raise PermissionDenied
+            
+            self.request_log[client_ip].append(now)
+        
+        response = self.get_response(request)
+
+        return response
        
