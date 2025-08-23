@@ -2,7 +2,7 @@ from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from datetime import datetime
 import logging
-from collections import deque
+from django.http import JsonResponse
 
 class RequestLoggingMiddleware:
     def __init__(self, get_response):
@@ -53,4 +53,20 @@ class OffensiveLanguageMiddleware:
         response = self.get_response(request)
 
         return response
-       
+
+
+class RolepermissionMiddleware:
+    def __init__(self, get_response):
+        self.get_response= get_response
+
+    def __call__(self, request):
+        if request.user.is_authenticated:
+            if not(request.user.is_superuser or 
+            hasattr(request.user,"role", None)in ["moderator","admin"]):
+                return JsonResponse(
+                    status=403
+                )
+            
+        response = self.get_response(request)
+
+        return response
