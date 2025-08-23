@@ -41,6 +41,4 @@ class OffensiveLanguageMiddleware:
             self.request_log[client_ip]=deque()
 
         request_times = self.request_log[client_ip]
-
-
-        
+       
