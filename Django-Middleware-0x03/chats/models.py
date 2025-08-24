@@ -4,7 +4,6 @@ from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.conf import settings
 from django.core.exceptions import ValidationError
 
-
 class Roles(models.TextChoices):
     GUEST = 'Guest', 'guest'
     HOST = 'Host', 'host'
