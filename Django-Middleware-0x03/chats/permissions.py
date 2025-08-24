@@ -1,6 +1,7 @@
 from rest_framework import permissions
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
+
 class IsConversationParticipant(BasePermission):
 
     def has_object_permission(self, request, view, obj):
@@ -25,4 +26,3 @@ class IsConversationParticipant(BasePermission):
                 return True  
 
         return False
-
