@@ -4,6 +4,7 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import Message
+from django.views.decorators.cache import cache_page
 
 
 User = get_user_model()
@@ -17,7 +18,7 @@ def delete_user(request):
         return redirect("home")  # or login page, etc.
     return render(request, "messaging/confirm_delete.html")  # optional confirmation page
 
-
+@cache_page(60)
 @login_required
 def conversation_view(request):
     # Messages where user is sender
