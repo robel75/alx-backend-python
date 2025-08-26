@@ -20,6 +20,13 @@ class Message(models.Model):
         on_delete = models.CASCADE,
         related_name = "recieved_messages"
     )
+    parent_message = models.ForeignKey(
+        'self',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='replies'
+    )
     content = models.TextField()
     timestamp= models.DateTimeField(auto_now_add=True)
 

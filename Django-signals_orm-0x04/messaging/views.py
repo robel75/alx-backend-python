@@ -15,3 +15,10 @@ def delete_user(request):
         return redirect("home")  # or login page, etc.
     return render(request, "messaging/confirm_delete.html")  # optional confirmation page
 
+def get_threaded_messages(message):
+    return {
+        "message": message,
+        "replies": [get_threaded_messages(reply) for reply in message.replies.all()]
+    }
+
+
