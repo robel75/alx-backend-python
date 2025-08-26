@@ -27,10 +27,16 @@ class Message(models.Model):
         on_delete=models.CASCADE,
         related_name='replies'
     )
+
     content = models.TextField()
     timestamp= models.DateTimeField(auto_now_add=True)
 
     edited= models.BooleanField(default= False)
+    read = models.BooleanField(default=False)
+
+    objects = models.Manager()
+    unread = UnreadMessagesManager()
+
 
     def __str__(self)->str:
         return f"message from {self.sender} to {self.reciever} at {self.timestamp}"
@@ -76,3 +82,7 @@ class MessageHistory(models.Model):
     def __str__(self):
         return f"History of message {self.message.message_id} at {self.edited_at}"
 
+
+class UnreadMessagesManager(models.Manager):
+    def for_user(self, user):
+        return self.filter(receiver=user, read=False).only('message_id', 'sender', 'content', 'timestamp')

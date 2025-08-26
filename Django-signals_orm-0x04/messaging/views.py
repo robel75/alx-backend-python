@@ -42,4 +42,10 @@ def conversation_view(request):
     return render(request, 'messaging/conversation.html', {'threaded_messages': threaded_messages})
 
 
+@login_required
+def inbox_view(request):
+    unread_messages = Message.unread.for_user(request.user)
+    return render(request, 'messaging/inbox.html', {'unread_messages': unread_messages})
+
+
 
