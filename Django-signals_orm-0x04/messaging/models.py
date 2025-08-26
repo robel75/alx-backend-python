@@ -15,7 +15,7 @@ class Message(models.Model):
         on_delete = models.CASCADE,
         related_name = "sent_messages"
     )
-    reciever = models.ForeignKey(
+    receiver = models.ForeignKey(
         User,
         on_delete = models.CASCADE,
         related_name = "recieved_messages"
