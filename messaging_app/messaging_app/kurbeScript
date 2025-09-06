@@ -7,11 +7,11 @@ then
     exit 1
 fi
 
-echo "🚀 Starting Minikube cluster..."
+echo "Starting Minikube cluster..."
 minikube start
 
-echo "🔍 Verifying cluster status..."
+echo "Verifying cluster status..."
 kubectl cluster-info
 
-echo "📦 Retrieving available pods..."
+echo "Retrieving available pods..."
 kubectl get pods --all-namespaces
