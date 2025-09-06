@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -e
+
+kubectl apply -f messaging_app/blue_deployment.yaml
+
+kubectl rollout status deployment/django-messaging-app-blue
+
+SERVICE_URL=$(minikube service messaging-app-service --url)
+
+echo "Testing app availability..."
+for i in {1..20}; do
+  curl -s $SERVICE_URL > /dev/null
+  echo "Request $i sent"
+  sleep 1
+done
+
+kubectl get pods
