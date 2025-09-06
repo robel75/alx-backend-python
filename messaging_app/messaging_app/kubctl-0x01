@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -e
+
+kubectl scale deployment django-messaging-app --replicas=3
+
+kubectl get pods
+
+SERVICE_URL=$(minikube service messaging-app-service --url)
+wrk -t2 -c10 -d10s $SERVICE_URL
+
+kubectl top pods
